@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/25766146/README.md)
 # 🍽️ The Velvet Room
 ### Private Fine Dining Reservation System
 
@@ -54,7 +53,7 @@ A web-based reservation system for **The Velvet Room**, a private fine dining re
 
 **Admin Dashboard**
 - Secure session-based login
-- Visual room availability grid (Available / Booked) across all time slots
+- Visual room availability grid (Available / Booked / Maintenance) across all time slots
 - View all reservations with full guest details
 - Confirm or cancel reservations
 
@@ -102,10 +101,14 @@ python app.py
 http://127.0.0.1:5000
 ```
 
+> ⚠️ If the database already exists from a previous run, delete `restaurant.db` before starting to ensure seed data is applied correctly.
+
 ### Default Admin Credentials
 | Username | Password |
 |----------|----------|
 | `admin` | `admin123` |
+
+> ⚠️ Note: Passwords are stored in plaintext in this prototype. A production deployment should use hashed passwords (e.g. `bcrypt`).
 
 ---
 
@@ -115,7 +118,7 @@ http://127.0.0.1:5000
 restaurant-booking/
 ├── app.py              # Flask application & API routes
 ├── database.py         # Database schema & seed data
-├── restaurant.db       # SQLite database file
+├── restaurant.db       # SQLite database file (auto-generated)
 ├── templates/
 │   └── index.html      # Main HTML template (Jinja2)
 └── static/
@@ -142,15 +145,22 @@ restaurant-booking/
 
 ## 🧪 Testing
 
-Manual black-box testing across **12 test cases** covering:
+Manual black-box testing across **12 test cases** covering all core system functions.
 
-| Area | Test Cases |
-|------|-----------|
-| Reservation submission | Valid submission, missing fields, double-booking prevention |
-| Admin authentication | Valid login, invalid login |
-| Admin dashboard | Cancel/confirm reservation, grid updates after booking |
-| UI features | Menu detail preview, room preview modal, summary panel updates |
-| Data integrity | 4:00 PM slot not available, data persists after server restart |
+| ID | Area | Test Case | Expected Result | Status |
+|----|------|-----------|-----------------|--------|
+| TC01 | Reservation | Submit valid reservation with all fields filled | Reservation saved, success message shown | ✅ Pass |
+| TC02 | Reservation | Submit with one or more required fields missing | Warning toast shown, submission blocked | ✅ Pass |
+| TC03 | Reservation | Submit duplicate booking (same room, date, time) | Error message: "room already booked at that time" | ✅ Pass |
+| TC04 | Reservation | Estimated total updates correctly when pax/menu changes | Summary panel reflects correct RM amount | ✅ Pass |
+| TC05 | Admin Auth | Login with correct username and password | Admin dashboard loads successfully | ✅ Pass |
+| TC06 | Admin Auth | Login with incorrect credentials | Error message: "Invalid credentials" | ✅ Pass |
+| TC07 | Admin Dashboard | Confirm a pending reservation | Status updates to "Confirmed" in table | ✅ Pass |
+| TC08 | Admin Dashboard | Cancel a confirmed reservation | Status updates to "Cancelled", room grid updates | ✅ Pass |
+| TC09 | Admin Dashboard | Room grid reflects booked slots after reservation | Booked cell shown correctly for room and time | ✅ Pass |
+| TC10 | UI | Open menu detail preview modal | Modal displays correct menu name, price, description | ✅ Pass |
+| TC11 | UI | Open room preview modal and select suite | Suite selected and reflected in booking form | ✅ Pass |
+| TC12 | Data Integrity | Restart server and reload admin dashboard | All previous reservations still displayed correctly | ✅ Pass |
 
 **Result: 12 / 12 test cases passed ✅**
 
@@ -158,25 +168,61 @@ Manual black-box testing across **12 test cases** covering:
 
 ## 📅 Agile Process (Scrum)
 
-Development was organised into **3 Scrum sprints** over 6 weeks, with a Kanban board tracking progress across Backlog → In Progress → Review → Done.
+Development was organised into **3 Scrum sprints** over 6 weeks, using a Kanban board to track progress across: **Backlog → In Progress → Review → Done**.
 
-| Sprint | Duration | Key Deliverables | Outcome |
-|--------|----------|-----------------|---------|
-| Sprint 1 | Week 1–2 | Project setup, DB design, Flask skeleton, basic reservation form | Core structure established |
-| Sprint 2 | Week 3–4 | Full reservation flow, admin login, dashboard, room preview modal | Fully functional system |
-| Sprint 3 | Week 5–6 | UI polish, time slots, menu previews, bug fixes, testing, docs | Production-ready system |
+> 📎 Full Product Backlog, User Stories, and Sprint Board snapshots are documented in [`Scrum_Documentation.pdf`](./Scrum_Documentation.pdf).
+
+### 🏃 Sprint Summary
+
+| Sprint | Key Deliverables | Outcome |
+|--------|-----------------|---------|
+| Sprint 1 | Responsive frontend UI, SQLite DB with room & package data, basic reservation submission API | Customer-facing booking system delivered |
+| Sprint 2 | Admin session authentication, availability grid dashboard, double-booking prevention, UI modals & toast notifications | System 100% complete and ready for deployment |
 
 **Sprint completion rate: 10 / 10 user stories (100%) ✅**
 
 ---
 
+### 🔁 Sprint Retrospectives
+
+**Sprint 1 Retrospective**
+- ✅ What went well: Fully responsive UI and database structure were completed on schedule; reservation API was functional by end of sprint.
+- ⚠️ What could improve: Manual QA testing was not prioritised early enough during the sprint.
+- 🔧 Action taken: Dedicated time for QA testing was planned into Sprint 2 from the start.
+
+**Sprint 2 Retrospective**
+- ✅ What went well: Using GitHub for version control prevented code conflicts; clear separation of frontend and backend tasks kept the team productive.
+- ⚠️ What could improve: Should allocate more time for manual QA testing earlier in the sprint.
+- 🔧 Action taken: For future projects, will implement automated unit testing alongside manual testing.
+
+---
+
+### 📊 Simple Metrics
+
+| Sprint | Stories Planned | Stories Completed | Completion Rate |
+|--------|----------------|-------------------|-----------------|
+| Sprint 1 | 5 | 5 | 100% |
+| Sprint 2 | 5 | 5 | 100% |
+| **Total** | **10** | **10** | **100%** |
+
+---
+
 ## 🤝 Collaboration
 
-- Feature branches for all major tasks (e.g. `feature/admin-dashboard`, `feature/reservation-form`)
+- Feature branches used for all major tasks (e.g. `feature/admin-dashboard`, `feature/reservation-form`, `feature/room-modal`)
 - Pull requests submitted for code review before merging into `main`
 - GitHub Issues used to track bugs and feature requests
-- All four members contributed commits across different areas
-- Daily updates via WhatsApp, weekly virtual sprint reviews
+- All four members contributed commits across different areas of the codebase
+- Daily progress updates via WhatsApp group; weekly virtual sprint reviews every Friday
+
+### Role Distribution
+
+| Member | Primary Responsibilities |
+|--------|--------------------------|
+| Lee Wen Xin | Flask API routes, database design, session management, Scrum facilitation |
+| Jaff Go | HTML structure, Bootstrap layout, room/menu UI components |
+| Ngoi Chang Zen | Manual testing, bug reporting, test case documentation |
+| Lam Chuan Fong | Project report, README, sprint documentation, retrospective notes |
 
 ---
 
