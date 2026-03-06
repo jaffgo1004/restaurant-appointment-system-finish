@@ -74,10 +74,12 @@ def init_db():
     cursor.executemany('''
         INSERT OR IGNORE INTO package (id, name, price_per_pax, min_pax, max_pax) VALUES (?, ?, ?, ?, ?)
     ''', [
-        (1, 'Classic Banquet', 88, 2, 9),
-        (2, 'Premium Banquet', 128, 2, 9),
-        (3, 'Grand Celebration', 188, 10, 100),
-        (4, 'Royal Feast', 288, 10, 100),
+        (1, 'The Executive Table',    388, 1, 100),
+        (2, 'The Anniversary Menu',   288, 1, 100),
+        (3, 'The Family Feast',       218, 1, 100),
+        (4, 'The Celebration Dinner', 318, 1, 100),
+        (5, 'The Prestige Tasting',   688, 1, 100),
+        (6, 'The Grand Brunch',       248, 1, 100),
     ])
 
     conn.commit()
